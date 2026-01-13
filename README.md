@@ -5,6 +5,7 @@
 [![CI/CD Pipeline](https://img.shields.io/badge/CI%2FCD-Jenkins-blue?logo=jenkins)](https://github.com/RemonMamdouhNagatyGerges/Two-Tier-Flask-app-using-vmware/blob/main/Jenkinsfile)
 [![Python 3.9+](https://img.shields.io/badge/Python-3.9+-green)](https://www.python.org/)
 [![Docker](https://img.shields.io/badge/Docker-Containerized-2496ED)](https://www.docker.com/)
+[![Flask](https://img.shields.io/badge/Flask-2.x-black)](https://flask.palletsprojects.com/)
 [![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
 
 ---
@@ -21,6 +22,7 @@
 - [Docker Deployment](#-docker-deployment)
 - [CI/CD Pipeline](#-cicd-pipeline)
 - [Project Structure](#-project-structure)
+- [Testing](#-testing)
 - [Contributing](#-contributing)
 - [License](#-license)
 
@@ -32,22 +34,24 @@ This project showcases a **production-grade Flask application** deployed on VMwa
 
 ✅ **Containerization** with Docker  
 ✅ **Infrastructure as Code** (IaC)  
-✅ **Continuous Integration/Continuous Deployment** (CI/CD)  
+✅ **Continuous Integration/Continuous Deployment** (CI/CD) with Jenkins  
 ✅ **Database Management** with SQLAlchemy ORM  
 ✅ **Security** with non-root Docker users  
 ✅ **Scalability** using Docker Compose  
+✅ **Automated Testing** with Pytest  
 
 ---
 
 ## ⭐ Features
 
 - 🐳 **Fully Containerized** - Docker & Docker Compose ready
-- 🔄 **Automated CI/CD** - GitHub Actions for testing & deployment
+- 🔄 **Automated CI/CD** - Jenkins pipeline for testing & deployment
 - 🗄️ **Database Integration** - SQLAlchemy ORM with SQLite
 - 🔐 **Security Best Practices** - Non-root containers, environment variables
 - 📊 **Logging & Monitoring** - Structured logging for debugging
 - 🧪 **Unit Testing** - Pytest integration with automated testing
 - 🚀 **Production Ready** - Gunicorn WSGI server configuration
+- 📦 **Modular Architecture** - Clean separation of concerns with blueprints
 
 ---
 
@@ -55,26 +59,47 @@ This project showcases a **production-grade Flask application** deployed on VMwa
 
 ```
 ┌─────────────────────────────────────────┐
-│        GitHub Actions (CI/CD)           │
+│          Jenkins CI/CD Server           │
 │  ┌─────────────┬──────────────┐         │
-│  │   Test      │  Build & Push │         │
+│  │ Build & Run │  Run Tests   │         │
+│  │    App      │              │         │
 │  └─────────────┴──────────────┘         │
+│           ↓                              │
+│  ┌──────────────────────────┐           │
+│  │  Health Check Endpoint   │           │
+│  │  (Port 5000)             │           │
+│  └──────────────────────────┘           │
 └──────────────────┬──────────────────────┘
                    │
-┌──────────────────┴──────────────────────┐
-│      Docker Container (Flask App)       │
+        ┌──────────┴──────────┐
+        │                     │
+┌───────▼────────┐  ┌────────▼───────┐
+│  Docker Build  │  │ Docker Compose │
+│  & Compose     │  │   Orchestrate  │
+└───────┬────────┘  └────────┬───────┘
+        │                     │
+        └──────────┬──────────┘
+                   │
+┌──────────────────▼──────────────────────┐
+│   Docker Container (Flask App)          │
 │  ┌──────────────────────────────────┐   │
 │  │  Flask Application (Gunicorn)    │   │
 │  │  ├─ Routes & Controllers         │   │
-│  │  ├─ Database Models             │   │
-│  │  └─ Business Logic              │   │
+│  │  ├─ Database Models (ORM)        │   │
+│  │  ├─ Business Logic               │   │
+│  │  ├─ Static Files (CSS, JS)       │   │
+│  │  └─ Health Check Endpoint        │   │
 │  └──────────────────────────────────┘   │
-│  Port: 5000                             │
+│  Port: 5000 (Exposed)                   │
 └──────────────────┬──────────────────────┘
                    │
-┌──────────────────┴──────────────────────┐
-│     SQLite Database (Persistent)        │
-└─────────────────────────────────────────┘
+        ┌──────────┴──────────┐
+        │                     │
+┌───────▼────────┐  ┌────────▼───────┐
+│   SQLite DB    │  │  Log Storage    │
+│  (Persistent)  │  │  (Persistent)   │
+│   site.db      │  │  logs/          │
+└────────────────┘  └─────────────────┘
 ```
 
 ---
@@ -90,8 +115,9 @@ This project showcases a **production-grade Flask application** deployed on VMwa
 | **Orchestration** | Docker Compose | 1.29+ |
 | **Python Version** | Python | 3.9+ |
 | **Testing** | Pytest | Latest |
-| **CI/CD** | GitHub Actions | Built-in |
+| **CI/CD** | Jenkins | Latest |
 | **Web Server** | Gunicorn | Latest |
+| **Frontend** | HTML5, CSS3, JavaScript | Latest |
 
 ---
 
@@ -103,6 +129,7 @@ Before you begin, ensure you have installed:
 - **Docker** - [Download](https://www.docker.com/products/docker-desktop)
 - **Docker Compose** - [Download](https://docs.docker.com/compose/install/)
 - **Git** - [Download](https://git-scm.com/)
+- **Jenkins** (optional, for CI/CD) - [Download](https://www.jenkins.io/download/)
 
 ---
 
@@ -111,7 +138,7 @@ Before you begin, ensure you have installed:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/RemonMamdouh/Two-Tier-Flask-app-using-vmware.git
+git clone https://github.com/RemonMamdouhNagatyGerges/Two-Tier-Flask-app-using-vmware.git
 cd Two-Tier-Flask-app-using-vmware
 ```
 
@@ -148,7 +175,14 @@ Create a `.env` file in the project root:
 ```bash
 FLASK_ENV=development
 FLASK_DEBUG=True
-DATABASE_URL=sqlite:///app.db
+DATABASE_URL=sqlite:///site.db
+```
+
+### Verify Application
+
+```bash
+curl http://localhost:5000
+curl http://localhost:5000/health
 ```
 
 ---
@@ -186,60 +220,50 @@ Stop services:
 docker-compose down
 ```
 
+Rebuild and deploy:
+```bash
+docker-compose up -d --build
+```
+
 ---
 
 ## 🔄 CI/CD Pipeline
 
-This project uses **GitHub Actions** for automated:
+This project uses **Jenkins** for automated:
+
+### ✅ Build & Run App Stage
+- Triggers: Every commit/push
+- Builds Docker image via Docker Compose
+- Starts all services in detached mode
+- Creates persistent volumes for database and logs
 
 ### ✅ Testing Stage
-- Runs on: Every push & pull request
+- Runs on: Every pipeline execution
 - Python version: 3.9
-- Tests: `pytest` with coverage
+- Tests: `pytest` executed inside Docker container
+- Scope: All test files in `tests/` directory
 - Dependencies: Auto-installed from `requirements.txt`
 
-### 🏗️ Build & Deploy Stage
-- Triggers: Main branch pushes only
-- Builds Docker image
-- Runs container health checks
-- Ready for production deployment
+### ✅ Health Check Stage
+- Verifies app startup (10-second wait)
+- Curl request to health endpoint: `/health`
+- Validates application accessibility on port 5000
+- Ensures container stability
 
-**View pipeline status:** [GitHub Actions](https://github.com/RemonMamdouh/Two-Tier-Flask-app-using-vmware/actions)
+### 📋 Pipeline Stages
 
----
+1. **Build & Run App** - Docker Compose builds and starts services
+2. **Run Unit Tests** - Pytest runs inside the Flask container
+3. **Health Check** - Curl request verifies application health
+4. **Post Actions** - Automatic cleanup on pipeline failure
 
-## 📁 Project Structure
+### Failure Handling
 
-```
-Two-Tier-Flask-app-using-vmware/
-│
-├── 📄 run.py                    # Application entry point
-├── 📄 requirements.txt          # Python dependencies
-├── 📄 Dockerfile               # Docker image definition
-├── 📄 docker-compose.yml       # Multi-container orchestration
-│
-├── 📁 app/                      # Flask application package
-│   ├── __init__.py             # App factory & initialization
-│   ├── routes.py               # API routes & endpoints
-│   ├── models.py               # Database models (SQLAlchemy)
-│   └── config.py               # Configuration settings
-│
-├── 📁 tests/                    # Unit tests
-│   ├── test_app.py             # Application tests
-│   └── conftest.py             # Pytest configuration
-│
-├── 📁 database/                 # Persistent database storage
-│   └── app.db                  # SQLite database
-│
-├── 📁 logs/                     # Application logs
-│
-├── 📁 .github/workflows/        # GitHub Actions workflows
-│   └── ci-cd.yml               # CI/CD pipeline configuration
-│
-├── 📄 .gitignore               # Git ignore rules
-├── 📄 README.md                # This file
-└── 📄 LICENSE                  # MIT License
-```
+- On test failure: Pipeline stops, logs preserved
+- Auto-cleanup: `docker-compose down` removes containers
+- Database/logs: Persistent volumes retained for debugging
+
+**View pipeline configuration:** [Jenkinsfile](Jenkinsfile)
 
 ---
 
@@ -257,11 +281,72 @@ pytest -v
 pytest tests/test_app.py -v
 ```
 
-### Test Coverage
+### Run Tests with Coverage
 
 ```bash
 pip install pytest-cov
-pytest --cov=app tests/
+pytest --cov=app tests/ -v
+```
+
+### Run Tests Inside Docker Container
+
+```bash
+docker-compose exec -T web python -m pytest tests/ -v
+```
+
+### Test Output Example
+
+```
+tests/test_app.py::test_app_import PASSED          [ 50%]
+tests/test_app.py::test_always_passes PASSED       [100%]
+
+======================== 2 passed in 0.05s =========================
+```
+
+---
+
+## 📁 Project Structure
+
+```
+Two-Tier-Flask-app-using-vmware/
+│
+├── 📄 run.py                    # Application entry point
+├── 📄 requirements.txt          # Python dependencies
+├── 📄 Dockerfile               # Docker image definition
+├── 📄 docker-compose.yml       # Multi-container orchestration
+├── 📄 Jenkinsfile              # Jenkins CI/CD pipeline
+│
+├── 📁 app/                      # Flask application package
+│   ├── __init__.py             # App factory & initialization
+│   ├── routes.py               # API routes & endpoints
+│   ├── models.py               # Database models (SQLAlchemy)
+│   ├── config.py               # Configuration settings
+│   │
+│   ├── 📁 static/              # Static files (CSS, JS, images)
+│   │   ├── style.css           # Application styling
+│   │   └── script.js           # Client-side JavaScript
+│   │
+│   └── 📁 templates/           # HTML templates
+│       └── index.html          # Main template
+│
+├── 📁 tests/                    # Unit tests
+│   ├── test_app.py             # Application tests
+│   └── conftest.py             # Pytest configuration
+│
+├── 📁 database/                 # Persistent database storage
+│   └── site.db                 # SQLite database file
+│
+├── 📁 logs/                     # Application logs (persistent)
+│
+├── 📁 .github/workflows/        # GitHub Actions workflows (Legacy)
+│   └── ci-cd.yml               # Previous GitHub Actions config
+│
+├── 📁 venv/                     # Virtual environment (local only)
+│
+├── 📄 .gitignore               # Git ignore rules
+├── 📄 .dockerignore            # Docker build ignore rules
+├── 📄 README.md                # This file
+└── 📄 LICENSE                  # MIT License
 ```
 
 ---
@@ -278,19 +363,32 @@ pytest --cov=app tests/
 
 2. **Clone Repository:**
    ```bash
-   git clone https://github.com/RemonMamdouh/Two-Tier-Flask-app-using-vmware.git
+   git clone https://github.com/RemonMamdouhNagatyGerges/Two-Tier-Flask-app-using-vmware.git
    cd Two-Tier-Flask-app-using-vmware
    ```
 
-3. **Deploy with Docker Compose:**
+3. **Install Docker & Docker Compose:**
+   ```bash
+   sudo apt update
+   sudo apt install -y docker.io docker-compose
+   sudo usermod -aG docker $USER
+   ```
+
+4. **Deploy with Docker Compose:**
    ```bash
    docker-compose up -d
    ```
 
-4. **Verify Deployment:**
+5. **Verify Deployment:**
    ```bash
    curl http://localhost:5000
    docker-compose logs -f
+   ```
+
+6. **Monitor Application:**
+   ```bash
+   docker-compose ps
+   docker-compose stats
    ```
 
 ---
@@ -301,6 +399,7 @@ pytest --cov=app tests/
 - **Container Size:** ~200MB (Python 3.9-slim)
 - **Memory Usage:** ~80MB at idle
 - **Database:** Instant local SQLite queries
+- **Response Time:** < 100ms per request
 
 ---
 
@@ -311,6 +410,8 @@ pytest --cov=app tests/
 ✅ No hardcoded secrets  
 ✅ SQLAlchemy ORM prevents SQL injection  
 ✅ Gunicorn as production WSGI server  
+✅ Health check endpoint for monitoring  
+✅ Persistent log storage for audit trail  
 
 ---
 
@@ -334,9 +435,9 @@ This project is licensed under the **MIT License** - see [LICENSE](LICENSE) file
 
 ## 📞 Contact & Support
 
-- **GitHub:** [@RemonMamdouh](https://github.com/RemonMamdouh)
-- **LinkedIn:** [Your LinkedIn Profile](https://linkedin.com/in/your-profile)
-- **Email:** your-email@example.com
+- **GitHub:** [@RemonMamdouhNagatyGerges](https://github.com/RemonMamdouhNagatyGerges)
+- **LinkedIn:** [Your LinkedIn Profile]([https://linkedin.com/in/your-profile](https://www.linkedin.com/in/remonmamdouhnagaty/))
+- **Email:** remonmamdouhnagaty@gmail.com
 
 ---
 
@@ -346,11 +447,17 @@ This project is licensed under the **MIT License** - see [LICENSE](LICENSE) file
 - [ ] Implement JWT authentication
 - [ ] Add API documentation (Swagger/OpenAPI)
 - [ ] Kubernetes deployment (Helm charts)
-- [ ] Multi-tier database architecture
+- [ ] Multi-database support (PostgreSQL, MySQL)
 - [ ] Load balancing configuration
+- [ ] Advanced monitoring & alerting
+- [ ] Database migration system (Alembic)
 
 ---
 
 ## ⭐ If you find this project helpful, please consider giving it a star!
 
 **Made with ❤️ by Remon Mamdouh**
+
+---
+
+**Last Updated:** January 13, 2026
