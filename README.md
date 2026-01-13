@@ -341,7 +341,6 @@ Two-Tier-Flask-app-using-vmware/
 ├── 📁 venv/                     # Virtual environment (local only)
 │
 ├── 📄 .gitignore               # Git ignore rules
-├── 📄 .dockerignore            # Docker build ignore rules
 ├── 📄 README.md                # This file
 ```
 
