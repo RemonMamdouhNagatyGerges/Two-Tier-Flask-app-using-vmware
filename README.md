@@ -2,7 +2,7 @@
 
 > A production-ready, containerized Flask web application demonstrating modern DevOps practices, CI/CD automation, and cloud-native architecture.
 
-[![CI/CD Pipeline](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions-blue)](https://github.com/RemonMamdouhNagatyGerges/Two-Tier-Flask-app-using-vmware/blob/main/Jenkinsfile)
+[![CI/CD Pipeline](https://img.shields.io/badge/CI%2FCD-Jenkins-blue?logo=jenkins)](https://github.com/RemonMamdouhNagatyGerges/Two-Tier-Flask-app-using-vmware/blob/main/Jenkinsfile)
 [![Python 3.9+](https://img.shields.io/badge/Python-3.9+-green)](https://www.python.org/)
 [![Docker](https://img.shields.io/badge/Docker-Containerized-2496ED)](https://www.docker.com/)
 [![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
