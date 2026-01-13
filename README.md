@@ -24,7 +24,6 @@
 - [Project Structure](#-project-structure)
 - [Testing](#-testing)
 - [Contributing](#-contributing)
-- [License](#-license)
 
 ---
 
@@ -338,15 +337,12 @@ Two-Tier-Flask-app-using-vmware/
 │
 ├── 📁 logs/                     # Application logs (persistent)
 │
-├── 📁 .github/workflows/        # GitHub Actions workflows (Legacy)
-│   └── ci-cd.yml               # Previous GitHub Actions config
 │
 ├── 📁 venv/                     # Virtual environment (local only)
 │
 ├── 📄 .gitignore               # Git ignore rules
 ├── 📄 .dockerignore            # Docker build ignore rules
 ├── 📄 README.md                # This file
-└── 📄 LICENSE                  # MIT License
 ```
 
 ---
@@ -425,38 +421,15 @@ Contributions are welcome! Please follow these steps:
 4. Push to branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
----
-
-## 📝 License
-
-This project is licensed under the **MIT License** - see [LICENSE](LICENSE) file for details.
 
 ---
 
 ## 📞 Contact & Support
 
 - **GitHub:** [@RemonMamdouhNagatyGerges](https://github.com/RemonMamdouhNagatyGerges)
-- **LinkedIn:** [Your LinkedIn Profile]([https://linkedin.com/in/your-profile](https://www.linkedin.com/in/remonmamdouhnagaty/))
+- **LinkedIn:** [Your LinkedIn Profile](https://www.linkedin.com/in/remonmamdouhnagaty/)
 - **Email:** remonmamdouhnagaty@gmail.com
 
----
-
-## 🎯 Roadmap
-
-- [ ] Add Redis caching layer
-- [ ] Implement JWT authentication
-- [ ] Add API documentation (Swagger/OpenAPI)
-- [ ] Kubernetes deployment (Helm charts)
-- [ ] Multi-database support (PostgreSQL, MySQL)
-- [ ] Load balancing configuration
-- [ ] Advanced monitoring & alerting
-- [ ] Database migration system (Alembic)
-
----
-
-## ⭐ If you find this project helpful, please consider giving it a star!
-
-**Made with ❤️ by Remon Mamdouh**
 
 ---
 
