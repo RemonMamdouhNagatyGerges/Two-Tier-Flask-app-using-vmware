@@ -13,7 +13,7 @@ pipeline {
             steps {
                 // Run tests inside the running flask container
                 // This replaces the 'python -m pytest' step that failed
-                sh 'docker-compose exec -T webs python -m pytest tests/ -v'
+                sh 'docker-compose exec -T web python -m pytest tests/ -v'
             }
         }
 
